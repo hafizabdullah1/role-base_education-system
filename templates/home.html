@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Welcome Page
+{% endblock %}
+
+{% block content %}
+<div class="m-10">
+
+    <h1>Welcome To Education System</h1>
+
+    <a href="{% url 'login' %}">
+        <button class="border-2 p-2  border-green-500">Login Page</button>
+    </a>
+</div>
+
+
+
+{% endblock %}

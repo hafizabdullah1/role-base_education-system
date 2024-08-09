@@ -21,30 +21,19 @@
             </span>
         </div>
         {% endif %}
-        <h1 class="text-2xl font-semibold mb-4">Login</h1>
+        <h1 class="text-2xl font-semibold mb-4">Create Class</h1>
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
-            <!-- Username Input -->
-            <div class="mb-4">
-                <label for="email" class="block text-gray-600">Email</label>
-                <input type="text" id="email" name="email" autofocus
-                    class="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-[#4F198B]"
-                    autocomplete="off">
-            </div>
-            <!-- Password Input -->
-            <div class="mb-4">
-                <label for="password" class="block text-gray-600">Password</label>
-                <input type="password" id="password" name="password"
-                    class="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-[#4F198B]"
-                    autocomplete="off">
-            </div>
 
-            <div class="mb-6 text-[#4F198B]">
-                <a href="#" class="hover:underline">Forgot Password?</a>
+            <div class="mb-4">
+                <label for="name" class="block text-gray-600">Name</label>
+                <input type="text" id="name" name="name" autofocus
+                    class="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-[#4F198B]"
+                    autocomplete="on">
             </div>
-            <!-- Login Button -->
             <button type="submit"
-                class="bg-[#4F198B] hover:opacity-90 text-white font-semibold rounded-md py-2 px-4 w-full">Login</button>
+                class="bg-[#4F198B] hover:opacity-90 text-white font-semibold rounded-md py-2 px-4 w-full">Create</button>
         </form>
     </div>
-</div>{% endblock %}
+</div>
+{% endblock %}

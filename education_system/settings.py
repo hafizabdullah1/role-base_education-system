@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     
     'user_accounts',
+    'admin_dashboard',
+    'teacher'
 ]
 
 AUTH_USER_MODEL = 'user_accounts.CustomUser'
@@ -139,4 +141,4 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'habdullah4510@gmail.com'
 EMAIL_HOST_PASSWORD = 'gehinsqfbkgoxdfh'
-EMAIL_HOST_USER = 'habdullah4510@gmail.com'
+DEFAULT_FROM_EMAIL = 'habdullah4510@gmail.com'

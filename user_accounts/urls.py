@@ -5,8 +5,13 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('', home, name='home'),
-    path('login/', loginView, name='login'),
-    path('teacher/', teacher, name='teacher'),
+    path('login/', login_user, name='login'),
+    path('logout/', logout_user, name='logout'),
+    path('register/', register, name='register'),
+    path("change_password/", change_password, name="change_password"),
+
+
+    # Tesing url
     path('student/', student, name='student'),
 ]
 

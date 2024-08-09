@@ -6,9 +6,9 @@ from .manager import MyAccountManager
 
 
 class CustomUser(AbstractUser):
-    username          = None
-    name              = models.CharField(max_length=255)
-    email             = models.EmailField(max_length=255, unique=True)
+    username                = None
+    name                    = models.CharField(max_length=255)
+    email                   = models.EmailField(max_length=255, unique=True)
 
     ROLE_CHOICES = [
         ('admin', 'Admin'),
@@ -24,7 +24,24 @@ class CustomUser(AbstractUser):
     objects = MyAccountManager()
 
     def __str__(self):
-        return self.email
+        return self.name
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # class CustomUser(AbstractUser):
 #     email                    = models.EmailField(verbose_name='email', max_length=60, unique=True)

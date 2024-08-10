@@ -4,7 +4,7 @@
 
 ### Admin Dashboard
 
-** Admins can create, read, update, and delete admin, teacher, and student accounts. A randomly generated password will be sent to the user's email. **
+**Admins can create, read, update, and delete admin, teacher, and student accounts. A randomly generated password will be sent to the user's email.**
 
 ___
 

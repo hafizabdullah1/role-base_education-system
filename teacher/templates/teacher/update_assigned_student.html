@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="">
+    <div class="bg-gray-100 flex justify-center items-center min-h-screen">
+        <!-- Left: Image -->
+        <div class="w-1/2 min-h-screen hidden lg:block">
+            <img src="https://img.freepik.com/free-vector/e-learning-education-illustration_1284-32925.jpg?t=st=1722970366~exp=1722973966~hmac=226b29b25d9d27b0641b343f9d92e593feabd180e8f6d40a87961467afcdca64&w=740"
+                alt="Placeholder Image" class="object-cover w-full min-h-full">
+        </div>
+        <!-- Right: Assign Students Form -->
+        <div class="lg:p-36 md:p-52 sm:20 p-8 w-full lg:w-1/2">
+            <h1 class="text-2xl font-semibold mb-4">Update <span class="text-[#4F198B]">{{student.name}}</span> Class
+            </h1>
+            <form method="post">
+                {% csrf_token %}
+
+                <div class="mb-4">
+                    <label for="class_id" class="block text-gray-600">Select Class</label>
+                    <select id="class_id" name="class_id" required
+                        class="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-[#4F198B]">
+                        <option value="">Select a Class</option>
+                        {% if classes %}
+                        {% for cls in classes %}
+                        <option value="{{ cls.id }}" {% if cls.id == student.class_id.id %}selected{% endif %}>{{ cls.name }}</option>
+                        {% endfor %}
+                        {% endif %}
+                    </select>
+                </div>
+                <button type="submit"
+                    class="bg-[#4F198B] hover:opacity-90 text-white font-semibold rounded-md py-2 px-4 w-full">
+                    Update
+                </button>
+            </form>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

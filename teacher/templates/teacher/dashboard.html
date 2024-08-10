@@ -10,10 +10,10 @@
     <div class="p-12 pt-28">
 
         <div class="flex justify-between">
-            <h1 class="text-3xl underline font-semibold mb-4">Teacher Dashboard | <span class="text-[#7747FF]">Classes</span></h1>
+            <h1 class="text-3xl underline font-semibold mb-4">Teacher Dashboard | <span class="text-[#4F198B]">Classes</span></h1>
             <a href="{% url 'create_class' %}" class="py-2">
                 <button
-                    class="inline-block h-full px-6 mb-2 rounded-l-xl rounded-t-xl bg-[#7747FF] hover:bg-white hover:text-[#7747FF] focus:text-[#7747FF] focus:bg-gray-200 text-gray-50 font-bold leading-loose transition duration-200">
+                    class="inline-block h-full px-6 mb-2 rounded-l-xl rounded-t-xl bg-[#4F198B] hover:bg-white hover:text-[#4F198B] focus:text-[#4F198B] focus:bg-gray-200 text-gray-50 font-bold leading-loose transition duration-200">
                     Create Class
                 </button>
             </a>
@@ -42,11 +42,11 @@
                 <tbody class="whitespace-nowrap">
                     {% for class in classes %}
                     <tr class="hover:bg-gray-50">
-                        <td class="p-4 text-[16px] text-gray-800  ">
+                        <td class="p-4 text-[16px] text-green-500  ">
                             <p class="mb-5">{{class.name}}</p>
                         </td>
                         <td class="p-4 text-[16px] text-gray-800  ">
-                            <p class="mb-5">{{class.name}}</p>
+                            <p class="mb-5">{{ class.lesson_count }} lessons</p>
                         </td>
                         <td class="p-4 text-[16px] text-gray-800  ">
                             <p class="mb-5">{{class.teacher_id}}</p>

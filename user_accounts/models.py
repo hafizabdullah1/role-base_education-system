@@ -1,31 +1,36 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.apps import apps
 from .manager import MyAccountManager
 
-# Create your models here.
-
-
 class CustomUser(AbstractUser):
-    username                = None
-    name                    = models.CharField(max_length=255)
-    email                   = models.EmailField(max_length=255, unique=True)
-
+    username                 = None
+    name                     = models.CharField(max_length=255)
+    email                    = models.EmailField(max_length=255, unique=True)
+    
     ROLE_CHOICES = [
         ('admin', 'Admin'),
         ('teacher', 'Teacher'),
         ('student', 'Student')
     ]
-
-    role = models.CharField(max_length=10, choices=ROLE_CHOICES)
-
+    
+    role                     = models.CharField(max_length=10, choices=ROLE_CHOICES)
+    
+    # Define the ForeignKey to Class model
+    class_id                 = models.ForeignKey(
+        'teacher.Class',  # Using a string reference to avoid import issues
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL
+    )
+    
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['name']
-
+    
     objects = MyAccountManager()
-
+    
     def __str__(self):
         return self.name
-
 
 
 

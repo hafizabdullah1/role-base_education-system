@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %} Teacher Dashboard | Delete Lesson {% endblock %}
+
+{% block content %}
+
+<div class="font-[sans-serif]">
+    <div class="bg-gradient-to-r from-blue-700 to-blue-300 w-full h-60">
+        <img src="https://readymadeui.com/cardImg.webp" alt="Banner Image" class="w-full h-full object-cover" />
+    </div>
+
+    <div class="-mt-28 mb-6 px-4">
+        <div class="mx-auto max-w-6xl shadow-lg p-8 relative bg-white rounded-md">
+            <h2 class="text-xl text-gray-800 font-bold">Delete Question</h2>
+
+            <form method="post" enctype="multipart/form-data" class="mt-8 grid sm:grid-cols-2 gap-6">
+                {% csrf_token %}
+                <div>
+                    <h1>Do you wanna delete  <b> {{question.statement}} Question ? </b> <span class="text-red-500"><b>Note</b>: All data related to this specific question will be delete permanently.</span></h1>
+                    <button type='submit'
+                        class="text-white font-semibold w-max bg-red-500 hover:bg-red-600 tracking-wide rounded-md text-sm px-6 py-3 mt-4">
+                        Delete Lesson
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

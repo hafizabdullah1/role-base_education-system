@@ -21,19 +21,37 @@
             </span>
         </div>
         {% endif %}
-        <h1 class="text-2xl font-semibold mb-4">Update Class</h1>
+        <h1 class="text-2xl font-semibold mb-4">Create Lesson</span></h1>
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
 
             <div class="mb-4">
                 <label for="name" class="block text-gray-600">Name</label>
-                <input type="name" id="name" name="name" autofocus value="{{form.name}}" required
+                <input type="name" id="name" name="name" autofocus required value="{{lesson.name}}"
                     class="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-[#4F198B]"
                     autocomplete="on">
             </div>
 
+            <div class="mb-4">
+                <label for="class" class="block text-gray-600">Select Class in which you want to add lesson</label>
+                <select required
+                    class="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-[#4F198B]"
+                    name="class" id="class">
+                    <option value="">------------</option>
+                    {% if classes %}
+                    {% for class in classes %}
+                    {% if lesson.class_id == class %}
+                    <option selected value="{{class.name}}">{{class.name}}</option>
+                    {% else %}
+                    <option value="{{class.name}}">{{class.name}}</option>
+                    {% endif %}
+                    {% endfor %}
+                    {% endif %}
+                </select>
+            </div>
+
             <button type="submit"
-                class="bg-[#4F198B] hover:opacity-90 text-white font-semibold rounded-md py-2 px-4 w-full">Update</button>
+                class="bg-[#4F198B] hover:opacity-90 text-white font-semibold rounded-md py-2 px-4 w-full">Create</button>
         </form>
     </div>
 </div>

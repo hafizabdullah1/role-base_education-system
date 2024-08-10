@@ -20,7 +20,7 @@ def home(request):
     return render(request, "home.html", {})
 
 # Login view
-def login_user(request):
+def login_user(request): 
     # This condition will check when user is already login then redirect user to dashboard according to role. 
     if request.user.is_authenticated:
         if request.user.role == 'teacher':
@@ -57,8 +57,8 @@ def login_user(request):
                 if user.is_superuser or user.role == 'admin':
                     return redirect('custom_admin')
             
-            
     return render(request, 'user_accounts/login.html')
+
 
 # Register user view
 @user_passes_test(lambda u: u.is_superuser)
@@ -103,7 +103,39 @@ def register(request):
 def logout_user(request):
     logout(request)
     return redirect('login')
+
+
+# update_user
+@login_required(login_url='/login')
+def update_user(request, id):
+    user = get_object_or_404(CustomUser, id=id)
+    name = request.POST.get('name')
+    email = request.POST.get('email')
+    role = request.POST.get('role')
+
+    if request.method == 'POST':
+        if user:
+            user.name = name
+            user.email = email
+            user.role = role
+            user.save()
+            return redirect("custom_admin")
+
+    context = {'form': user}
     
+    return render(request, "user_accounts/update_user.html", context)
+    
+# delete user account from admin dashboard
+@user_passes_test(lambda u: u.is_superuser)
+def delete_user(request, id):
+    user = CustomUser.objects.get(id = id)
+    if request.method == 'POST':
+        user.delete()
+        return redirect("custom_admin")
+    context = {'user': user}
+    return render(request,"user_accounts/delete_user.html", context)    
+    
+
 # Change Password
 def change_password(request):
     user_id = request.GET.get('user_id')

@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="pt-24">
+    <div class="flex gap-10 mb-10">
+        <button type="submit"
+            class="bg-[#4F198B] hover:opacity-90 text-white font-semibold rounded-md py-2 px-4 w-full">
+            Unassigned Students
+        </button>
+        <a href="{% url 'assigned_students' %}" class="w-full">
+            <button type="submit" class="bg-gray-300 hover:opacity-90  font-semibold rounded-md py-2 px-4 w-full">
+                Assigned Students
+            </button>
+        </a>
+    </div>
+    <div class="bg-gray-100 flex justify-center items-center min-h-screen">
+        <!-- Left: Image -->
+        <div class="w-1/2 min-h-screen hidden lg:block">
+            <img src="https://img.freepik.com/free-vector/e-learning-education-illustration_1284-32925.jpg?t=st=1722970366~exp=1722973966~hmac=226b29b25d9d27b0641b343f9d92e593feabd180e8f6d40a87961467afcdca64&w=740"
+                alt="Placeholder Image" class="object-cover w-full min-h-full">
+        </div>
+        <!-- Right: Assign Students Form -->
+        <div class="lg:p-36 md:p-52 sm:20 p-8 w-full lg:w-1/2">
+            <h1 class="text-2xl font-semibold mb-4">Assign Students to Class</h1>
+            <form method="post">
+                {% csrf_token %}
+
+                <!-- Class Selection -->
+                <div class="mb-4">
+                    <label for="class_id" class="block text-gray-600">Select Class</label>
+                    <select id="class_id" name="class_id" required
+                        class="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-[#4F198B]">
+                        <option value="">Select a Class</option>
+                        {% for class in classes %}
+                        <option value="{{ class.id }}">{{ class.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Student Selection -->
+                <div class="mb-4">
+                    <label class="block text-gray-600">Select Students</label>
+                    <div>
+                        {% if students %}
+                        {% for student in students %}
+                        <label class="flex items-center">
+                            <input type="checkbox" name="student_ids" value="{{ student.id }}"
+                                class="text-[#4F198B] border-gray-300 focus:outline-none focus:ring-[#4F198B]">
+                            <span class="ml-2 text-gray-600">{{ student.name }}</span>
+                        </label>
+                        {% endfor %}
+                        {% else %}
+                        <p>All Students are assigned to their classes.</p>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <button type="submit"
+                    class="bg-[#4F198B] hover:opacity-90 text-white font-semibold rounded-md py-2 px-4 w-full">
+                    Assign
+                </button>
+            </form>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

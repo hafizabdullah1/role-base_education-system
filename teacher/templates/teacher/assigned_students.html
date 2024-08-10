@@ -1,37 +1,40 @@
 {% extends "base.html" %}
-{% block title %} Teacher Dashboard | Questions {% endblock %}
+{% block title %} Admin Dashboard {% endblock %}
 
 {% block content %}
 
 <main>
-    <ul class="flex font-sans bg-gray-100">
 
-    </ul>
-    <div class="p-12 pt-28">
-
-        <div class="flex justify-between">
-            <h1 class="text-3xl underline font-semibold mb-4">Teacher Dashboard | <span class="text-[#7747FF]">Questions</span></h1>
-            <a href="{% url 'create_question' %}" class="py-2">
-                <button
-                class="inline-block h-full px-6 mb-2 rounded-l-xl rounded-t-xl bg-[#7747FF] hover:bg-white hover:text-[#7747FF] focus:text-[#7747FF] focus:bg-gray-200 text-gray-50 font-bold leading-loose transition duration-200">
-                Create Question
+    <div class="pt-28">
+        <div class="flex gap-10 mb-10">
+            <a href="{% url 'assign_students' %}" class="w-full">
+                <button type="submit" class="bg-gray-300 hover:opacity-90  font-semibold rounded-md py-2 px-4 w-full">
+                    Unassigned Students
+                </button>
+            </a>
+            <button type="submit"
+                class="bg-[#4F198B] text-white hover:opacity-90 font-semibold rounded-md py-2 px-4 w-full">
+                Assigned Students
             </button>
-        </a>
-    </div>
+        </div>
+        <div class="flex justify-between px-12">
+            <h1 class="text-3xl underline font-semibold mb-4">Teacher Dashboard | <span class="text-[#4F198B]">Assigned
+                    Students</span></h1>
+        </div>
 
-        <div class="font-sans overflow-x-auto">
-            {% if questions %}
+        <div class="font-sans overflow-x-auto px-12">
+            {% if students %}
             <table class="min-w-full bg-white">
                 <thead class="bg-gray-100 whitespace-nowrap">
                     <tr>
                         <th class="p-4 text-left text-base font-semibold text-gray-800">
-                            Lesson name
+                            Student name
                         </th>
                         <th class="p-4 text-left text-base font-semibold text-gray-800">
-                            No. of questions
+                            Class name
                         </th>
                         <th class="p-4 text-left text-base font-semibold text-gray-800">
-                            Created Teacher name
+                            Student ID
                         </th>
                         <th class="p-4 text-left text-base font-semibold text-gray-800">
                             Actions
@@ -40,20 +43,20 @@
                 </thead>
 
                 <tbody class="whitespace-nowrap">
-                    {% for question in questions %}
+                    {% for std in students %}
                     <tr class="hover:bg-gray-50">
-                        <td class="p-4 text-[16px] text-gray-800  ">
-                            <p class="mb-5">{{question.name}}</p>
+                        <td class="p-4 text-[16px] text-green-500">
+                            <p class="mb-5">{{std.name}}</p>
                         </td>
-                        <td class="p-4 text-[16px] text-gray-800  ">
-                            <p class="mb-5">{{question.name}}</p>
+                        <td class="p-4 text-[16px] text-gray-800">
+                            <p class="mb-5">{{ std.class_id.name }}</p>
                         </td>
-                        <td class="p-4 text-[16px] text-gray-800  ">
-                            <p class="mb-5">{{question.teacher_id}}</p>
+                        <td class="p-4 text-[16px] text-gray-800">
+                            <p class="mb-5">{{std.id}}</p>
                         </td>
 
                         <td class="pb-4 px-4">
-                            <a href="{% url 'update_class' id=question.id %}">
+                            <a href="{% url 'update_assigned_student' student_id=std.id %}">
                                 <button class="mr-4 border" title="Edit">
                                     <svg xmlns="http://www.w3.org/2000/svg"
                                         class="w-5 fill-blue-500 hover:fill-blue-700" viewBox="0 0 348.882 348.882">
@@ -66,7 +69,7 @@
                                     </svg>
                                 </button>
                             </a>
-                            <a href="{% url 'delete_class' id=question.id %}">
+                            <a href="{% url 'remove_assigned_student' student_id=std.id %}">
                                 <button class="mr-4" title="Delete">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 fill-red-500 hover:fill-red-700"
                                         viewBox="0 0 24 24">
@@ -79,17 +82,12 @@
                                     </svg>
                                 </button>
                             </a>
-                            <a href="{% url '' id=question.id %}">
-                                <button class="mr-4" title="View questions">
-                                    <i class="fa-regular fa-eye text-lg fill-red-500 hover:fill-red-700"></i>
-                                </button>
-                            </a>
                         </td>
                     </tr>
                     {% endfor %}
                 </tbody>
                 {% else %}
-                <p>No question found. Lets create questions and begins the magic✨</p>
+                <p>No class found. Lets create class and begins the magic✨</p>
             </table>
             {% endif %}
         </div>

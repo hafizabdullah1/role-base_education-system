@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Update Question
+{% endblock %}
+
+{% block content %}
+<div class="bg-gray-100 flex justify-center items-center h-screen">
+    <!-- Left: Image -->
+    <div class="w-1/2 h-screen hidden lg:block">
+        <img src="https://img.freepik.com/free-vector/e-learning-education-illustration_1284-32925.jpg?t=st=1722970366~exp=1722973966~hmac=226b29b25d9d27b0641b343f9d92e593feabd180e8f6d40a87961467afcdca64&w=740"
+            alt="Placeholder Image" class="object-cover w-full h-full">
+    </div>
+    <!-- Right: Update Form -->
+    <div class="lg:p-36 md:p-52 sm:20 p-8 w-full lg:w-1/2">
+        {% if messages %}
+        <div class="bg-red-200 text-red-800 p-4 rounded-lg" role="alert">
+            <strong class="font-bold text-sm mr-4">Error!</strong>
+            <span class="block text-sm sm:inline max-sm:mt-2">{% for message in messages %} {{ message }} {% endfor %}
+            </span>
+        </div>
+        {% endif %}
+        <h1 class="text-2xl font-semibold mb-4">Update Question</h1>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="mb-4">
+                <label for="statement" class="block text-gray-600">Question Statement</label>
+                <input type="text" id="statement" name="statement" value="{{ question.statement }}" autofocus required
+                    class="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-[#4F198B]"
+                    autocomplete="on">
+            </div>
+
+            {% if question.type == 'fill_in_blank' %}
+            <div class="mb-4">
+                <label for="answer" class="block text-gray-600">Correct Answer</label>
+                <input type="text" id="answer" name="answer" value="{{ question.answer }}" autofocus required
+                    class="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-[#4F198B]"
+                    autocomplete="on">
+            </div>
+            {% endif %}
+
+            {% if question.type == 'true_false' %}
+            <div class="mb-4">
+                <label class="block text-gray-600">Select Answer {{question.answer}}</label>
+                <div class="flex gap-4">
+                    <label class="flex items-center">
+                        <input type="radio" name="answer" value="True" {% if question.answer == True %}checked{% endif %}
+                            class="text-[#4F198B] border-gray-300 focus:outline-none focus:ring-[#4F198B]">
+                        <span class="ml-2 text-gray-600">True</span>
+                    </label>
+                    <label class="flex items-center">
+                        <input type="radio" name="answer" value="False" {% if question.answer == False %}checked{% endif %}
+                            class="text-[#4F198B] border-gray-300 focus:outline-none focus:ring-[#4F198B]">
+                        <span class="ml-2 text-gray-600">False</span>
+                    </label>
+                </div>
+            </div>
+            {% endif %}
+
+            {% if question.type == 'mcqs' %}
+            <div class="mb-4">
+                <label for="option_a" class="block text-gray-600">Option A</label>
+                <input type="text" id="option_a" name="option_a" value="{{ question.options.option_a }}" autofocus required
+                    class="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-[#4F198B]"
+                    autocomplete="off">
+            </div>
+            <div class="mb-4">
+                <label for="option_b" class="block text-gray-600">Option B</label>
+                <input type="text" id="option_b" name="option_b" value="{{ question.options.option_b }}" autofocus required
+                    class="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-[#4F198B]"
+                    autocomplete="off">
+            </div>
+            <div class="mb-4">
+                <label for="option_c" class="block text-gray-600">Option C</label>
+                <input type="text" id="option_c" name="option_c" value="{{ question.options.option_c }}" autofocus required
+                    class="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-[#4F198B]"
+                    autocomplete="off">
+            </div>
+            <div class="mb-4">
+                <label for="option_d" class="block text-gray-600">Option D</label>
+                <input type="text" id="option_d" name="option_d" value="{{ question.options.option_d }}" autofocus required
+                    class="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-[#4F198B]"
+                    autocomplete="off">
+            </div>
+
+            <div class="mb-4">
+                <label for="answer" class="block text-gray-600">Select Correct Answer</label>
+                <select required
+                    class="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-[#4F198B]"
+                    name="answer">
+                    <option value="">------------</option>
+                    <option value="a" {% if question.answer == 'a' %}selected{% endif %}>Option A</option>
+                    <option value="b" {% if question.answer == 'b' %}selected{% endif %}>Option B</option>
+                    <option value="c" {% if question.answer == 'c' %}selected{% endif %}>Option C</option>
+                    <option value="d" {% if question.answer == 'd' %}selected{% endif %}>Option D</option>
+                </select>
+            </div>
+            {% endif %}
+
+            <button type="submit"
+                class="bg-[#4F198B] hover:opacity-90 text-white font-semibold rounded-md py-2 px-4 w-full">Update</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

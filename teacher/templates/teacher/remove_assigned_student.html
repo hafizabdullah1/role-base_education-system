@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %} Admin Dashboard | Delete User {% endblock %}
+
+{% block content %}
+
+<div class="font-[sans-serif]">
+    <div class="bg-gradient-to-r from-blue-700 to-blue-300 w-full h-60">
+        <img src="https://readymadeui.com/cardImg.webp" alt="Banner Image" class="w-full h-full object-cover" />
+    </div>
+
+    <div class="-mt-28 mb-6 px-4">
+        <div class="mx-auto max-w-6xl shadow-lg p-8 relative bg-white rounded-md">
+            <h2 class="text-xl text-gray-800 font-bold">Remove Student from {{student.class_id.name}} Class</h2>
+
+            <form method="post" enctype="multipart/form-data" class="mt-8 grid sm:grid-cols-2 gap-6">
+                {% csrf_token %}
+                <div>
+                    <h1>Remove access for <b>{{student.name}}</b> from <b>{{student.class_id.name}}</b> class?
+                    </b> <span class="text-red-500"><b>Note</b>: {{student.name}} can't access lessons or questions for this class.
+                    </span></h1>
+                    <button type='submit'
+                        class="text-white font-semibold w-max bg-red-500 hover:bg-red-600 tracking-wide rounded-md text-sm px-6 py-3 mt-4">
+                        Remove Student
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

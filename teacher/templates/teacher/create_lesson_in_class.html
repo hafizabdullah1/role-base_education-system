@@ -21,19 +21,19 @@
             </span>
         </div>
         {% endif %}
-        <h1 class="text-2xl font-semibold mb-4">Update Class</h1>
+        <h1 class="text-2xl font-semibold mb-4">Create Lesson in <span class="text-[#5F2E95]">{{class.name}} class</span></h1>
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
 
             <div class="mb-4">
                 <label for="name" class="block text-gray-600">Name</label>
-                <input type="name" id="name" name="name" autofocus value="{{form.name}}" required
+                <input type="name" id="name" name="name" autofocus required
                     class="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-[#4F198B]"
                     autocomplete="on">
             </div>
-
+            
             <button type="submit"
-                class="bg-[#4F198B] hover:opacity-90 text-white font-semibold rounded-md py-2 px-4 w-full">Update</button>
+                class="bg-[#4F198B] hover:opacity-90 text-white font-semibold rounded-md py-2 px-4 w-full">Create</button>
         </form>
     </div>
 </div>

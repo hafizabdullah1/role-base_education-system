@@ -4,7 +4,7 @@
 
         <a href="{% url 'home' %}">
             <h3 style="font-family:cursive, sans-serif ;" class="tracking-tighter text-3xl "><span
-                    class="text-[#7747FF] font-semibold">E</span>ducation System</h3>
+                    class="text-[#4F198B] font-semibold">E</span>ducation System</h3>
         </a>
 
         <div id="collapseMenu"
@@ -25,12 +25,16 @@
                 {% if request.user.is_authenticated %}
                 <li class='max-lg:border-b max-lg:py-3 px-3'><a
                         href='{% if request.user.is_superuser %} {% url "custom_admin"  %} {% elif request.user.role == "teacher" %} {% url "teacher_dashboard"  %} {% else %} {% url "home"  %} {% endif %}'
-                        class='text-[#333] hover:text-[#7747FF] text-[15px] block font-semibold'>Dashboard</a>
+                        class='text-[#333] hover:text-[#4F198B] text-[15px] block font-semibold'>Dashboard</a>
                 </li>
                 {% if not request.user.is_superuser %}
                 <li class='max-lg:border-b max-lg:py-3 px-3'><a
                         href='{% url "all_lessons" %}'
-                        class='text-[#333] hover:text-[#7747FF] text-[15px] block font-semibold'>All Lessons</a>
+                        class='text-[#333] hover:text-[#4F198B] text-[15px] block font-semibold'>All Lessons</a>
+                </li>
+                <li class='max-lg:border-b max-lg:py-3 px-3'><a
+                        href='{% url "assign_students" %}'
+                        class='text-[#333] hover:text-[#4F198B] text-[15px] block font-semibold'>Assign Students To Classes</a>
                 </li>
                 {% endif %}
                 {% endif %}
@@ -43,13 +47,13 @@
                 {% if request.user.is_authenticated %}
                 <a href="{% url 'logout' %}">
                     <button
-                        class='px-5 py-2 text-sm rounded-full text-white border-2 border-[#7747FF] bg-[#7747FF] hover:bg-[#5F16a1]'>Logout
+                        class='px-5 py-2 text-sm rounded-full text-white border-2 border-[#4F198B] bg-[#4F198B] hover:bg-[#5F16a1]'>Logout
                     </button>
                 </a>
                 {% else %}
                 <a href="{% url 'login' %}">
                     <button
-                        class='px-5 py-2 text-sm rounded-full text-white border-2 border-[#7747FF] bg-[#7747FF] hover:bg-[#5F16a1]'>Login
+                        class='px-5 py-2 text-sm rounded-full text-white border-2 border-[#4F198B] bg-[#4F198B] hover:bg-[#5F16a1]'>Login
                     </button>
                 </a>
                 {% endif %}

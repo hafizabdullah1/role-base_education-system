@@ -21,30 +21,34 @@
             </span>
         </div>
         {% endif %}
-        <h1 class="text-2xl font-semibold mb-4">Login</h1>
+        <h1 class="text-2xl font-semibold mb-4">Submit Correct Answer</h1>
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
-            <!-- Username Input -->
+
             <div class="mb-4">
-                <label for="email" class="block text-gray-600">Email</label>
-                <input type="email" id="email" name="email" autofocus required
-                    class="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-[#4F198B]"
-                    autocomplete="on">
-            </div>
-            <!-- Password Input -->
-            <div class="mb-4">
-                <label for="password" class="block text-gray-600">Password</label>
-                <input type="password" id="password" name="password" required
-                    class="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-[#4F198B]"
-                    autocomplete="off">
+                <label for="statement" class="block text-gray-600">Statement</label>
+                <h4><strong>Q:</strong> {{question.statement}} ?</h4>
             </div>
 
-            <div class="mb-6 text-[#4F198B]">
-                <a href="#" class="hover:underline">Forgot Password?</a>
+            <!-- True/False Radio Button Section -->
+            <div class="mb-4">
+                <label class="block text-gray-600">Select Answer</label>
+                <div class="flex gap-4">
+                    <label class="flex items-center">
+                        <input type="radio" name="answer" value="True" required
+                            class="text-[#4F198B] border-gray-300 focus:outline-none focus:ring-[#4F198B]">
+                        <span class="ml-2 text-gray-600">True</span>
+                    </label>
+                    <label class="flex items-center">
+                        <input type="radio" name="answer" value="False" required
+                            class="text-[#4F198B] border-gray-300 focus:outline-none focus:ring-[#4F198B]">
+                        <span class="ml-2 text-gray-600">False</span>
+                    </label>
+                </div>
             </div>
-            <!-- Login Button -->
+
             <button type="submit"
-                class="bg-[#4F198B] hover:opacity-90 text-white font-semibold rounded-md py-2 px-4 w-full">Login</button>
+                class="bg-[#4F198B] hover:opacity-90 text-white font-semibold rounded-md py-2 px-4 w-full">Submit</button>
         </form>
     </div>
 </div>

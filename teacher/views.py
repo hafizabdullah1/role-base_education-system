@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import *
 from django.contrib import messages
-from django.db.models import Count
+from django.db.models import Count, Sum
 from user_accounts.models import CustomUser
 from education_system.decorators import role_required 
 
@@ -58,7 +58,6 @@ def update_class(request, id):
 @role_required('teacher')
 def delete_class(request, id):
     my_class = Class.objects.get(id = id)
-    print("my_class: ", my_class)
     if request.method == 'POST':
         my_class.delete()
         return redirect("teacher_dashboard")
@@ -188,7 +187,6 @@ def delete_lesson(request, lesson_id):
 @role_required('teacher')
 def questoins_by_lesson(request, lesson_id):
     selected_lesson = Lesson.objects.get(id=lesson_id)
-    print('selected_lesson: ', selected_lesson)
     questions = Question.objects.filter(lesson_id=selected_lesson)
 
     question_details = []
@@ -237,8 +235,7 @@ def create_question(request, lesson_id):
             lesson_id = lesson
         )
         question.save()
-        print("question_type: ", question_type)
-        print("statement: ", statement)
+  
         if question_type == 'true_false':
             return redirect("create_true_false_q", question_id=question.id)
         if question_type == 'fill_in_blank':
@@ -475,3 +472,92 @@ def update_assigned_student(request, student_id):
     classes = Class.objects.all()
     context = {'student': student, 'classes': classes}
     return render(request, "teacher/update_assigned_student.html", context)
+
+
+# Students result list according to classes
+@role_required('teacher')
+def students_results(request, class_id):
+    # Get the class
+    student_class = Class.objects.get(id=class_id)
+    
+    # Get all students in the class
+    students = CustomUser.objects.filter(class_id=student_class)
+    
+    student_summary = []
+    
+    for student in students:
+        # Total score for the student
+        total_score = Result.objects.filter(
+            student_id=student
+        ).aggregate(Sum('marks'))['marks__sum'] or 0
+        
+        # Total number of questions the student should have attempted
+        total_questions = Question.objects.filter(
+            lesson_id__class_id=student_class
+        ).count()
+        
+        # Number of questions the student has attempted
+        attempted_count = Result.objects.filter(
+            student_id=student
+        ).count()
+        
+        # Pending (non-attempted) questions
+        pending_count = total_questions - attempted_count
+        
+        student_data = {
+            'student': student,
+            'total_score': total_score,
+            'total_questions': total_questions,
+            'attempted_count': attempted_count,
+            'pending_count': pending_count,
+        }
+
+        student_summary.append(student_data)
+    
+    context = {'student_summary': student_summary, 'class': student_class}
+    return render(request, "teacher/students_results.html", context)
+
+
+# Single student result
+@role_required('teacher')
+def student_detailed_results(request, student_id):
+    print("student_id", student_id)
+    student = CustomUser.objects.get(id=student_id)
+    results = Result.objects.filter(student_id=student).select_related('question_id__lesson_id')
+    
+    detailed_results = {}
+    
+    for result in results:
+        lesson = result.question_id.lesson_id
+        if lesson.id not in detailed_results:
+            detailed_results[lesson.id] = {
+                'lesson': lesson,
+                'total_questions': Question.objects.filter(lesson_id=lesson).count(),
+                'attempted_count': 0,
+                'non_attempted_count': 0,
+                'total_score': 0,
+                'questions': [],
+            }
+        
+        if result.attempted:
+            detailed_results[lesson.id]['attempted_count'] += 1
+            if result.is_correct:
+                detailed_results[lesson.id]['total_score'] += result.marks
+        
+        else:
+            detailed_results[lesson.id]['non_attempted_count'] += 1
+        
+        question = result.question_id
+        question_data = {
+            'statement': question.statement,
+            'type': question.type,
+            'submitted_answer': result.answer,
+            'is_correct': result.is_correct
+        }
+        
+        detailed_results[lesson.id]['questions'].append(question_data)
+
+    context = {'student': student, 'detailed_results': detailed_results}
+    return render(request, "teacher/student_detailed_results.html", context)
+
+

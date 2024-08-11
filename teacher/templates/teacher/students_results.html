@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %} Teacher Dashboard | Student Results {% endblock %}
+
+{% block content %}
+<main>
+    <div class="p-12 pt-28">
+        <h1 class="text-3xl underline font-semibold mb-4">Teacher Dashboard | <span class="text-[#4F198B]">Students in {{ class.name }}</span></h1>
+        
+        <div class="font-sans overflow-x-auto">
+            {% if student_summary %}
+            <table class="min-w-full bg-white">
+                <thead class="bg-gray-100 whitespace-nowrap">
+                    <tr>
+                        <th class="p-4 text-left text-base font-semibold text-gray-800">Student Name</th>
+                        <th class="p-4 text-left text-base font-semibold text-gray-800">Total Score</th>
+                        <th class="p-4 text-left text-base font-semibold text-gray-800">Total Questions</th>
+                        <th class="p-4 text-left text-base font-semibold text-gray-800">Attempted Questions</th>
+                        <th class="p-4 text-left text-base font-semibold text-gray-800">Pending Questions</th>
+                        <th class="p-4 text-left text-base font-semibold text-gray-800">Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody class="whitespace-nowrap">
+                    {% for student_data in student_summary %}
+                    <tr class="hover:bg-gray-50">
+                        <td class="p-4 text-[16px] text-green-500">{{ student_data.student.name }}</td>
+                        <td class="p-4 text-[16px] text-gray-800">{{ student_data.total_score }}</td>
+                        <td class="p-4 text-[16px] text-gray-800">{{ student_data.total_questions }}</td>
+                        <td class="p-4 text-[16px] text-gray-800">{{ student_data.attempted_count }}</td>
+                        <td class="p-4 text-[16px] text-gray-800">{{ student_data.pending_count }}</td>
+                        <td class="p-4 text-[16px] text-gray-800">
+                            <a href="{% url 'student_detailed_results' student_id=student_data.student.id %}">
+                                <button class='px-5 py-2 text-sm rounded-md text-white border-2 border-[#4F198B] bg-[#4F198B] hover:bg-[#5F16a1]'>
+                                    View Detailed Results
+                                </button>
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <h1 class="text-semibold text-center mt-20 animate-bounce text-3xl">No students available in this class.</h1>
+            {% endif %}
+        </div>
+    </div>
+</main>
+{% endblock %}

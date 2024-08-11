@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %} Admin Dashboard {% endblock %}
+{% block title %} Teacher Dashboard | Classes {% endblock %}
 
 {% block content %}
 
@@ -10,7 +10,8 @@
     <div class="p-12 pt-28">
 
         <div class="flex justify-between">
-            <h1 class="text-3xl underline font-semibold mb-4">Teacher Dashboard | <span class="text-[#4F198B]">Classes</span></h1>
+            <h1 class="text-3xl underline font-semibold mb-4">Teacher Dashboard | <span
+                    class="text-[#4F198B]">Classes</span></h1>
             <a href="{% url 'create_class' %}" class="py-2">
                 <button
                     class="inline-block h-full px-6 mb-2 rounded-l-xl rounded-t-xl bg-[#4F198B] hover:bg-white hover:text-[#4F198B] focus:text-[#4F198B] focus:bg-gray-200 text-gray-50 font-bold leading-loose transition duration-200">
@@ -35,6 +36,9 @@
                         </th>
                         <th class="p-4 text-left text-base font-semibold text-gray-800">
                             Actions
+                        </th>
+                        <th class="p-4 text-left text-base font-semibold text-gray-800">
+                            Result
                         </th>
                     </tr>
                 </thead>
@@ -82,6 +86,15 @@
                             <a href="{% url 'lessons_by_class' id=class.id %}">
                                 <button class="mr-4" title="View lessons">
                                     <i class="fa-regular fa-eye text-lg fill-red-500 hover:fill-red-700"></i>
+                                </button>
+                            </a>
+                        </td>
+                        <td>
+                            <a href="{% url 'students_results' class_id=class.id %}">
+                                <button
+                                    class='px-5 py-2 text-sm rounded-md text-white border-2 border-[#4F198B] bg-[#4F198B] hover:bg-[#5F16a1]'
+                                    title="View questions" {% if lesson.question_count < 1 %}disable{% endif %}>
+                                    View Results
                                 </button>
                             </a>
                         </td>

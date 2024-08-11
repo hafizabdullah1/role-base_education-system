@@ -8,6 +8,6 @@ def role_required(role):
             if request.user.is_authenticated and request.user.role == role:
                 return view_func(request, *args, **kwargs)
             else:
-                return redirect('/dashboard/')
+                return redirect('login')
         return _wrapped_view
     return decorator

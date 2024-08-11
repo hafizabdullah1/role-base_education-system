@@ -31,4 +31,9 @@ urlpatterns = [
     path("assigned_students/", assigned_students_list, name="assigned_students"),
     path("remove_assigned_student/<int:student_id>", remove_assigned_student, name="remove_assigned_student"),
     path("update_assigned_student/<int:student_id>", update_assigned_student, name="update_assigned_student"),
+    
+    # Result
+    path('students_results/<int:class_id>/', students_results, name='students_results'),
+    path('student_detailed_results/<int:student_id>/result', student_detailed_results, name='student_detailed_results'),
+
 ]

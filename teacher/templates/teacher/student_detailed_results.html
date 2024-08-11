@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %} Teacher Dashboard | Detailed Results for {{ student.name }} {% endblock %}
+
+{% block content %}
+<main>
+    <div class="p-12 pt-28">
+        <h1 class="text-3xl underline font-semibold mb-4">Detailed Results for {{ student.name }}</h1>
+        
+        {% if detailed_results %}
+        <div class="font-sans overflow-x-auto">
+            {% for lesson_id, lesson_data in detailed_results.items %}
+            <h2 class="text-2xl font-semibold mb-4">{{ lesson_data.lesson.name }}</h2>
+            <table class="min-w-full bg-white mb-8">
+                <thead class="bg-gray-100 whitespace-nowrap">
+                    <tr>
+                        <th class="p-4 text-left text-base font-semibold text-gray-800">Question Statement</th>
+                        <th class="p-4 text-left text-base font-semibold text-gray-800">Submitted Answer</th>
+                        <th class="p-4 text-left text-base font-semibold text-gray-800">Correct Answer</th>
+                        <th class="p-4 text-left text-base font-semibold text-gray-800">Status</th>
+                    </tr>
+                </thead>
+
+                <tbody class="whitespace-nowrap">
+                    {% for question in lesson_data.questions %}
+                    <tr class="hover:bg-gray-50">
+                        <td class="p-4 text-[16px] text-gray-800">{{ question.statement }}</td>
+                        <td class="p-4 text-[16px] text-gray-800">{{ question.submitted_answer }}</td>
+                        <td class="p-4 text-[16px] text-gray-800">
+                            {% if question.type == 'true_false' %}
+                                {{ question.correct_answer|yesno:"True,False" }}
+                            {% elif question.type == 'mcqs' %}
+                                {{ question.correct_answer }}
+                            {% elif question.type == 'fill_in_blank' %}
+                                {{ question.correct_answer }}
+                            {% endif %}
+                        </td>
+                        <td class="p-4 text-[16px] text-gray-800">
+                            {% if question.is_correct %}
+                                <span class="text-green-500">Correct</span>
+                            {% else %}
+                                <span class="text-red-500">Incorrect</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% endfor %}
+        </div>
+        {% else %}
+        <h1 class="text-semibold text-center mt-20 animate-bounce text-3xl">No results available for this student.</h1>
+        {% endif %}
+    </div>
+</main>
+{% endblock %}

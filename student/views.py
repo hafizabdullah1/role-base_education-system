@@ -1,9 +1,8 @@
 from django.shortcuts import render, redirect
 from education_system.decorators import role_required
-from django.db.models import Count
 from teacher.models import *
 from django.http import JsonResponse
-from django.db.models import Count, Q
+from django.db.models import Sum
 
 
 # Dashboard with all lessons list of his class
@@ -52,8 +51,6 @@ def questions(request, lesson_id):
         Result.objects.filter(student_id=student, question_id__lesson_id=lesson).values_list('question_id', flat=True)
     )
     
-    print('aaq', attempted_questions)
-
     questions_with_attempt_status = []
     for question in questions:
         question_data = {
@@ -99,7 +96,12 @@ def quizing(request, lesson_id):
 
 
     if request.method == 'POST':
-        score = 0
+        total_score = Result.objects.filter(
+            student_id=student, lesson_id= lesson
+        ).aggregate(Sum('marks'))['marks__sum'] or 0
+
+        score = total_score
+        
         for question in questions_with_options:
             answer_key = f'answer_{question["id"]}'
             if answer_key in request.POST:
@@ -113,24 +115,23 @@ def quizing(request, lesson_id):
                 elif question['type'] == 'fill_in_blank':
                     correct_answer = Question_fillblank.objects.get(question_id=question['id']).answer.lower()
                     submitted_answer = submitted_answer.lower()
-
-                if submitted_answer == correct_answer:
-                    score += 10
+                    
+                if str(submitted_answer) == str(correct_answer):
+                    score + 10
 
                 Result.objects.create(
                     student_id=student,
                     question_id=Question.objects.get(id=question["id"]),
                     lesson_id=lesson,
                     answer=submitted_answer,
-                    is_correct=submitted_answer == correct_answer
+                    is_correct=submitted_answer == correct_answer,
+                    marks=score
                 )
 
         return redirect('questions', lesson_id=lesson.id)
     
     questions_json = JsonResponse(questions_with_options, safe=False)
     
-    print("qeustoin: ",questions_with_options)
-
     context = {
         'questions': questions_with_options,
         'questions_json': questions_json.content.decode('utf-8'),

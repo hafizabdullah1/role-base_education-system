@@ -3,7 +3,7 @@ from .models import *
 from django.contrib import messages
 from django.db.models import Count
 from user_accounts.models import CustomUser
-from .decorators import role_required 
+from education_system.decorators import role_required 
 
 # Create your views here.
 

@@ -1,0 +1,201 @@
+{% extends 'base.html' %}
+{% block title %}
+Student Dashboard | Quizing
+{% endblock %}
+
+{% block content %}
+<div class="pt-28 px-24">
+    <div class="pb-6 mb-6 border-b-2">
+        <h1 class="text-5xl mb-4 tracking-loose">
+            <span class="text-[#4F198B]">{{ lesson.name }}</span>
+            Quiz
+        </h1>
+        <p class="text-lg font-semibold opacity-70">Fill out this quiz for fun!</p>
+    </div>
+
+    <form method="post" id="quiz-form">
+        {% csrf_token %}
+        {% if questions %}
+        {% for question in questions %}
+        <div class="question-container" data-question-id="{{ question.id }}" style="display: none;">
+            <p class="text-lg font-semibold opacity-70 mb-3">{{ question.statement }} ?</p>
+            {% if question.type == 'true_false' %}
+            <div class="flex justify-start items-center gap-3">
+                <input type="radio" id="true_{{ question.id }}" class="text-3xl h-5 w-5 opacity-60 my-2"
+                    name="answer_{{ question.id }}" value="True">
+                <label for="true_{{ question.id }}">True</label>
+            </div>
+            <div class="flex justify-start items-center gap-3">
+                <input type="radio" id="false_{{ question.id }}" class="text-3xl h-5 w-5 opacity-60 my-2"
+                    name="answer_{{ question.id }}" value="False">
+                <label for="false_{{ question.id }}">False</label>
+            </div>
+            {% elif question.type == 'mcqs' %}
+            <div class="flex justify-start items-center gap-3">
+                <input type="radio" id="option_a_{{ question.id }}" class="text-3xl h-5 w-5 opacity-60 my-2"
+                    name="answer_{{ question.id }}" value="a">
+                <label for="option_a_{{ question.id }}">{{ question.options.option_a }}</label>
+            </div>
+            <div class="flex justify-start items-center gap-3">
+                <input type="radio" id="option_b_{{ question.id }}" class="text-3xl h-5 w-5 opacity-60 my-2"
+                    name="answer_{{ question.id }}" value="b">
+                <label for="option_b_{{ question.id }}">{{ question.options.option_b }}</label>
+            </div>
+            <div class="flex justify-start items-center gap-3">
+                <input type="radio" id="option_c_{{ question.id }}" class="text-3xl h-5 w-5 opacity-60 my-2"
+                    name="answer_{{ question.id }}" value="c">
+                <label for="option_c_{{ question.id }}">{{ question.options.option_c }}</label>
+            </div>
+            <div class="flex justify-start items-center gap-3">
+                <input type="radio" id="option_d_{{ question.id }}" class="text-3xl h-5 w-5 opacity-60 my-2"
+                    name="answer_{{ question.id }}" value="d">
+                <label for="option_d_{{ question.id }}">{{ question.options.option_d }}</label>
+            </div>
+
+            <br>
+            {% elif question.type == 'fill_in_blank' %}
+            <div class="mt-10">
+                <label for="answer_{{ question.id }}" class="block text-gray-800 font-semibold text-sm">
+                    Fill In The Blank
+                </label>
+                <div class="mt-2">
+                    <input type="text" id="answer_{{ question.id }}" name="answer_{{ question.id }}"
+                        class="block w-56 rounded-md py-1.5 px-2 ring-1 ring-inset ring-gray-400 focus:text-gray-800"
+                        required placeholder="Your answer here" />
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+        {% else %}
+        <p class="text-lg font-semibold opacity-70 mb-3">You've completed all the questions for this lesson!</p>
+        {% endif %}
+        <button type="submit" id="submit-button" style="display: none;"
+            class="inline-block py-1 px-6 mb-2 rounded-l-xl rounded-t-xl bg-[#4F198B] hover:opacity-80 ocus:text-[#4F198B] focus:bg-gray-200 text-gray-50 font-bold leading-loose transition duration-200 fixed bottom-20 right-24">
+            Submit Quiz
+        </button>
+    </form>
+
+    <button id="next-button"
+        class="inline-block py-1 px-6 mb-2 rounded-l-xl rounded-t-xl bg-[#4F198B] hover:opacity-80 ocus:text-[#4F198B] focus:bg-gray-200 text-gray-50 font-bold leading-loose transition duration-200 fixed bottom-20 right-24"
+        disabled>
+        Next
+    </button>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const questionContainers = document.querySelectorAll('.question-container');
+        const nextButton = document.getElementById('next-button');
+        const submitButton = document.getElementById('submit-button');
+        let currentIndex = parseInt(localStorage.getItem('currentIndex')) || 0;
+        const form = document.getElementById('quiz-form');
+
+        form.addEventListener('submit', function (event) {
+            localStorage.clear();
+        });
+
+        // Show the stored question index or start from the beginning
+        function showCurrentQuestion() {
+            questionContainers.forEach((container, index) => {
+                container.style.display = index === currentIndex ? 'block' : 'none';
+            });
+            validateCurrentQuestion();
+            updateButtons();
+        }
+
+        // Show or hide buttons based on the number of questions and current index
+        function updateButtons() {
+            if (questionContainers.length === 1) {
+                nextButton.style.display = 'none';
+                submitButton.style.display = 'inline-block';
+            } else if (currentIndex === questionContainers.length - 1) {
+                nextButton.style.display = 'none';
+                submitButton.style.display = 'inline-block';
+            } else if (questionContainers.length === 0) {
+                nextButton.style.display = 'none';
+                submitButton.style.display = 'none';
+            }
+            else {
+                nextButton.style.display = 'inline-block';
+                submitButton.style.display = 'none';
+            }
+        }
+
+
+
+        // Enable or disable the "Next" button based on whether an answer has been selected or entered
+        function validateCurrentQuestion() {
+            const inputs = questionContainers[currentIndex].querySelectorAll('input');
+            let isValid = false;
+            for (const input of inputs) {
+                if (input.type === 'radio' && input.checked) {
+                    isValid = true;
+                    break;
+                } else if (input.type === 'text' && input.value.trim() !== '') {
+                    isValid = true;
+                    break;
+                }
+            }
+            nextButton.disabled = !isValid;
+            if (isValid) {
+                nextButton.style.backgroundColor = "#4F198B"; // Enabled state color
+                nextButton.style.cursor = "pointer"; // Show pointer cursor for enabled button
+            } else {
+                nextButton.style.backgroundColor = "gray"; // Disabled state color
+                nextButton.style.cursor = "not-allowed"; // Show not-allowed cursor for disabled button
+            }
+        }
+
+        // Handle the "Next" button click
+        nextButton.addEventListener('click', function () {
+            questionContainers[currentIndex].style.display = 'none';
+            currentIndex++;
+            if (currentIndex < questionContainers.length) {
+                questionContainers[currentIndex].style.display = 'block';
+                validateCurrentQuestion();
+                updateButtons();
+                localStorage.setItem('currentIndex', currentIndex); // Save the current index
+            }
+        });
+
+        // Handle input changes to validate the current question and save the answer
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('change', function () {
+                validateCurrentQuestion();
+                const answerKey = `answer_${input.name}`;
+                localStorage.setItem(answerKey, input.value); // Save the answer in localStorage
+            });
+
+            input.addEventListener('input', function () {
+                validateCurrentQuestion();
+            });
+        });
+
+        // Restore answers from localStorage
+        function restoreAnswers() {
+            questionContainers.forEach((container) => {
+                const inputs = container.querySelectorAll('input');
+                inputs.forEach(input => {
+                    const answerKey = `answer_${input.name}`;
+                    const savedAnswer = localStorage.getItem(answerKey);
+                    if (input.type === 'radio' && input.value === savedAnswer) {
+                        input.checked = true;
+                    } else if (input.type === 'text' && savedAnswer) {
+                        input.value = savedAnswer;
+                    }
+                });
+            });
+        }
+
+        // Load the saved index and answers
+        showCurrentQuestion();
+        restoreAnswers();
+
+        // Initially disable the "Next" button and update buttons based on the number of questions
+        validateCurrentQuestion();
+        updateButtons();
+    });
+
+</script>
+{% endblock %}

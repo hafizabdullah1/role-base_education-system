@@ -2,10 +2,12 @@
     class='fixed w-full bg-red-500 top-0 flex bg-white border-b py-4 sm:px-8 px-6 font-[sans-serif] min-h-[80px] tracking-wide z-50'>
     <div class='flex flex-wrap items-center lg:gap-y-2 gap-4 w-full'>
 
-        <a href="{% url 'home' %}">
+        <a href="{% if request.user.is_superuser %} {% url "custom_admin"  %} {% elif request.user.role == "teacher" %} {% url "teacher_dashboard"  %} {% else %} {% url "student_dashboard"  %} {% endif %}">
             <h3 style="font-family:cursive, sans-serif ;" class="tracking-tighter text-3xl "><span
                     class="text-[#4F198B] font-semibold">E</span>ducation System</h3>
         </a>
+
+        <h3 class="text-lg font-semibold mt-3 ml-6">Welcome, <span class="text-[#4F198B]">{{request.user.name}}</span></h3>
 
         <div id="collapseMenu"
             class='lg:ml-10 max-lg:hidden lg:!block max-lg:before:fixed max-lg:before:bg-black max-lg:before:opacity-50 max-lg:before:inset-0 max-lg:before:z-50'>
@@ -21,13 +23,13 @@
             </button>
 
             <ul
-                class='lg:flex lg:gap-x-3 max-lg:space-y-3 max-lg:fixed max-lg:bg-white max-lg:w-1/2 max-lg:min-w-[300px] max-lg:top-0 max-lg:left-0 max-lg:p-6 max-lg:h-full max-lg:shadow-md max-lg:overflow-auto z-50'>
+                class='lg:flex lg:gap-x-3 max-lg:space-y-3 max-lg:fixed max-lg:bg-white max-lg:w-1/2 max-lg:min-w-[300px] max-lg:top-0 max-lg:left-0 max-lg:p-6 max-lg:h-full max-lg:shadow-md max-lg:overflow-auto z-50 pt-3.5'>
                 {% if request.user.is_authenticated %}
                 <li class='max-lg:border-b max-lg:py-3 px-3'><a
-                        href='{% if request.user.is_superuser %} {% url "custom_admin"  %} {% elif request.user.role == "teacher" %} {% url "teacher_dashboard"  %} {% else %} {% url "home"  %} {% endif %}'
+                        href='{% if request.user.is_superuser %} {% url "custom_admin"  %} {% elif request.user.role == "teacher" %} {% url "teacher_dashboard"  %} {% else %} {% url "student_dashboard"  %} {% endif %}'
                         class='text-[#333] hover:text-[#4F198B] text-[15px] block font-semibold'>Dashboard</a>
                 </li>
-                {% if not request.user.is_superuser %}
+                {% if not request.user.is_superuser and request.user.role != 'student' %}
                 <li class='max-lg:border-b max-lg:py-3 px-3'><a
                         href='{% url "all_lessons" %}'
                         class='text-[#333] hover:text-[#4F198B] text-[15px] block font-semibold'>All Lessons</a>

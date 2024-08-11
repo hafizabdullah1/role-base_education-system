@@ -3,9 +3,6 @@ from user_accounts.models import CustomUser
 
 # # Create your models here.
 
-class Cohort(models.Model):
-    name                        = models.CharField(max_length=255, null=False)
-
 
 class Class(models.Model):
     name                        = models.CharField(max_length=255)
@@ -13,7 +10,7 @@ class Class(models.Model):
     
     def __str__(self):
         return self.name
-
+    
 
 class Lesson(models.Model):
     name                        = models.CharField(max_length=255)
@@ -45,15 +42,27 @@ class Question_fillblank(models.Model):
     question_id                 = models.ForeignKey(Question,on_delete=models.CASCADE)
     answer                      = models.CharField(max_length=255)
     
-
-class Assign_Cohort(models.Model):
-    user_id             = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    cohort_id           = models.ForeignKey(Cohort, on_delete=models.CASCADE)
-    
     
 class Result(models.Model):
-    marks                   = models.IntegerField(default=0)
-    lesson_id               = models.ForeignKey(Lesson, on_delete=models.CASCADE)
-    user_id             = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    question_id             = models.ForeignKey(Question, on_delete=models.CASCADE)
+    marks                       = models.IntegerField(default=0)
+    lesson_id                   = models.ForeignKey(Lesson, on_delete=models.CASCADE)
+    student_id                  = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    question_id                 = models.ForeignKey(Question, on_delete=models.CASCADE)
+    attempted                   = models.BooleanField(default=False)
+    answer                      = models.CharField(max_length=10)
+    is_correct                  = models.BooleanField(default=False)
 
+
+
+
+
+
+# class Cohort(models.Model):
+#     name                        = models.CharField(max_length=255, null=False)
+
+
+# class Assign_Cohort(models.Model):
+#     user_id             = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+#     cohort_id           = models.ForeignKey(Cohort, on_delete=models.CASCADE)
+    
+    

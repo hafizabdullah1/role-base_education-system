@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %} Student Dashboard | Questions {% endblock %}
+
+{% block content %}
+
+<main>
+    <ul class="flex font-sans bg-gray-100">
+    </ul>
+    <div class="p-12 pt-28">
+
+        <div class="flex justify-between">
+            <h1 class="text-3xl underline font-semibold mb-4">Student Dashboard | <span
+                    class="text-[#4F198B]">Questions</span></h1>
+            <a href="{% url 'quizing' lesson_id=lesson.id %}" class="py-2">
+                <button
+                    class="inline-block h-full px-6 mb-2 rounded-l-xl rounded-t-xl bg-[#4F198B] hover:bg-white hover:text-[#4F198B] focus:text-[#4F198B] focus:bg-gray-200 text-gray-50 font-bold leading-loose transition duration-200">
+                    Start Quiz
+                </button>
+            </a>
+        </div>
+
+        <div class="font-sans overflow-x-auto">
+            {% if questions %}
+            <table class="min-w-full bg-white">
+                <thead class="bg-gray-100 whitespace-nowrap">
+                    <tr>
+                        <th class="p-4 text-left text-base font-semibold text-gray-800">
+                            Lesson name
+                        </th>
+                        <th class="p-4 text-left text-base font-semibold text-gray-800">
+                            Question statement
+                        </th>
+                        <th class="p-4 text-left text-base font-semibold text-gray-800">
+                            Question type
+                        </th>
+                    </tr>
+                </thead>
+
+                <tbody class="whitespace-nowrap">
+                    {% for question in questions %}
+                    <tr class="hover:bg-gray-50">
+                        <td class="text-green-500 p-4 text-[16px]">
+                            <p class="mb-5">{{ lesson.name }}</p>
+                        </td>
+                        <td class="p-4 text-[16px] text-gray-800  ">
+                            <p class="mb-5">{{ question.statement }} 
+                                {% if question.attempted %}
+                                    <span class="text-green-500">(Attempted)</span>
+                                {% endif %}
+                            </p>
+                        </td>
+                        <td class="p-4 text-[16px] text-gray-800  ">
+                            <p class="mb-5">{{ question.type }}</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+                <p>No questions found. Let's create questions and begin the magic✨</p>
+            {% endif %}
+        </div>
+    </div>
+</main>
+
+{% endblock %}

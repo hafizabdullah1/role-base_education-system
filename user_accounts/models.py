@@ -15,10 +15,8 @@ class CustomUser(AbstractUser):
     ]
     
     role                     = models.CharField(max_length=10, choices=ROLE_CHOICES)
-    
-    # Define the ForeignKey to Class model
     class_id                 = models.ForeignKey(
-        'teacher.Class',  # Using a string reference to avoid import issues
+        'teacher.Class',
         null=True,
         blank=True,
         on_delete=models.SET_NULL

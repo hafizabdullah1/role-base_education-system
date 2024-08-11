@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     
     'user_accounts',
     'admin_dashboard',
-    'teacher'
+    'teacher',
+    'student'
 ]
 
 AUTH_USER_MODEL = 'user_accounts.CustomUser'

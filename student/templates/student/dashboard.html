@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% block title %} Student Dashboard | Lessons {% endblock %}
+
+{% block content %}
+
+<main>
+    <ul class="flex font-sans bg-gray-100">
+
+    </ul>
+    <div class="p-12 pt-28">
+
+        <div class="flex justify-between">
+            <h1 class="text-3xl underline font-semibold mb-4">Student Dashboard | <span
+                    class="text-[#4F198B]">{{student.class_id.name}}</span></h1>
+
+        </div>
+        {% if student.class_id != None %}
+        <div class="font-sans overflow-x-auto">
+            {% if lessons %}
+            <table class="min-w-full bg-white">
+                <thead class="bg-gray-100 whitespace-nowrap">
+                    <tr>
+                        <th class="p-4 text-left text-base font-semibold text-gray-800">
+                            Class name
+                        </th>
+                        <th class="p-4 text-left text-base font-semibold text-gray-800">
+                            Lesson name
+                        </th>
+                        <th class="p-4 text-left text-base font-semibold text-gray-800">
+                            No. of questoins
+                        </th>
+                        <th class="p-4 text-left text-base font-semibold text-gray-800">
+                            No. of attempted questoins
+                        </th>
+                        <th class="p-4 text-left text-base font-semibold text-gray-800">
+                            No. of non attempted questoins
+                        </th>
+                        <th class="p-4 text-left text-base font-semibold text-gray-800">
+                            View questions
+                        </th>
+                    </tr>
+                </thead>
+
+                <tbody class="whitespace-nowrap">
+                    {% for lesson in lessons %}
+                    <tr class="hover:bg-gray-50">
+                        <td class="p-4 text-[16px] text-green-500">
+                            <p class="mb-5">{{lesson.class_id}}</p>
+                        </td>
+                        <td class="p-4 text-[16px] text-gray-800">
+                            <p class="mb-5">{{lesson.name}}</p>
+                        </td>
+                        <td class="p-4 text-[16px] text-gray-800">
+                            <p class="mb-5">{{lesson.question_count}} questions</p>
+                        </td>
+                        <td class="p-4 text-[16px] text-gray-800">
+                            <p class="mb-5">{{lesson.attempted_count }} questions</p>
+                        </td>
+                        <td class="p-4 text-[16px] text-gray-800">
+                            <p class="mb-5 flex gap-1"> {% if lesson.non_attempted_count > 0 %} <span class="bg-blue-300 rounded-full h-5 w-5 inline-block flex justify-center items-center text-white">{{lesson.non_attempted_count }}</span>  {% else %}  {{lesson.non_attempted_count }} {% endif %}  questions</p>
+                        </td>
+
+                        <td class="pb-4 px-4">
+                            {% if lesson.question_count < 1 %} <a href="javascript:void(0)">
+                                {% else %}
+                                <a href="{% url 'questions' lesson_id=lesson.id %}">
+                                {% endif %}
+                                <button  class='px-5 py-2 text-sm rounded-md text-white border-2 border-[#4F198B] bg-[#4F198B] hover:bg-[#5F16a1]' title="View questions" {% if lesson.question_count < 1 %}disable{% endif %}>
+                                   View Questions
+                                </button>
+                             </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                {% else %}
+                <h1 class="text-semibold text-center mt-20 animate-bounce text-3xl">Welcome to the
+                    {{student.class_id.name}} class. There are currently no lessons in this class.
+                </h1>
+            </table>
+            {% endif %}
+        </div>
+        {% else %}
+        <h1 class="text-semibold text-red-500 italic text-center mt-20 animate-bounce text-3xl">You are not currently
+            enrolled in any class.</h1>
+        {% endif %}
+    </div>
+</main>
+
+
+
+{% endblock %}

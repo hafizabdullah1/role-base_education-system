@@ -26,7 +26,7 @@ def login_user(request):
         if request.user.role == 'teacher':
             return redirect("teacher_dashboard")
         if request.user.role == 'student':
-            return redirect("student")
+            return redirect("student_dashboard")
         if request.user.is_superuser or user.role == 'admin' :
             return redirect('custom_admin')
     
@@ -53,7 +53,7 @@ def login_user(request):
                 if user.role == 'teacher':
                     return redirect("teacher_dashboard")
                 if user.role == 'student':
-                    return redirect("student")
+                    return redirect("student_dashboard")
                 if user.is_superuser or user.role == 'admin':
                     return redirect('custom_admin')
             
@@ -157,18 +157,8 @@ def change_password(request):
         if user.role == 'teacher':
             return redirect("teacher_dashboard")
         elif user.role == 'student':
-            return redirect("student")
+            return redirect("student_dashboard")
         elif user.is_superuser or user.role == 'admin':
             return redirect('custom_admin')
     
     return render(request, "user_accounts/change_password.html", {})
-
-
-
-
-
-
-
-# Testing view
-def student(request):
-    return render(request,"user_accounts/student.html")

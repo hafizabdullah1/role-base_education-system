@@ -17,7 +17,7 @@ from django.urls import reverse
 
 # Home page view
 def home(request):
-    return render(request, "home.html", {})
+    return render(request, "user_accounts/home.html", {})
 
 # Login view
 def login_user(request): 

@@ -35,5 +35,4 @@ urlpatterns = [
     # Result
     path('students_results/<int:class_id>/', students_results, name='students_results'),
     path('student_detailed_results/<int:student_id>/result', student_detailed_results, name='student_detailed_results'),
-
 ]

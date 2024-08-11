@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-dp$3=ennrrg0u@gm!)--+=o@3(&endt5l0ovl2(s4sh0#qa*8!'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['edusmart-system.onrender.com','.vercel.app', '.now.sh', 'localhost', '127.0.0.1']
 

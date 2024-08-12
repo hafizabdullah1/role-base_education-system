@@ -13,6 +13,29 @@ Student Dashboard | Quizing
         <p class="text-lg font-semibold opacity-70">Fill out this quiz for fun!</p>
     </div>
 
+    {% if messages %}
+    <div id="message-container" class="fixed top-5 right-5 z-50 space-y-2">
+        {% for message in messages %}
+        <div class="px-4 py-2 rounded shadow-lg text-white font-semibold
+                        {% if message.tags == 'debug' %}
+                            bg-gray-600
+                        {% elif message.tags == 'info' %}
+                            bg-blue-500
+                        {% elif message.tags == 'success' %}
+                            bg-green-500
+                        {% elif message.tags == 'warning' %}
+                            bg-yellow-500
+                        {% elif message.tags == 'error' %}
+                            bg-red-500
+                        {% else %}
+                            bg-gray-500
+                        {% endif %}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
     <form method="post" id="quiz-form">
         {% csrf_token %}
         {% if questions %}
@@ -94,6 +117,13 @@ Student Dashboard | Quizing
         form.addEventListener('submit', function (event) {
             localStorage.clear();
         });
+
+        setTimeout(function() {
+            const messageContainer = document.getElementById('message-container');
+            if (messageContainer) {
+                messageContainer.style.display = 'none';
+            }
+        }, 5000);
 
         // Show the stored question index or start from the beginning
         function showCurrentQuestion() {

@@ -187,35 +187,44 @@ def delete_lesson(request, lesson_id):
 @role_required('teacher')
 def questoins_by_lesson(request, lesson_id):
     selected_lesson = Lesson.objects.get(id=lesson_id)
-    questions = Question.objects.filter(lesson_id=selected_lesson)
+    questions = Question.objects.filter(lesson_id=selected_lesson) 
 
     question_details = []
     for question in questions:
         if question.type == 'mcqs':
-            mcq_answer = Question_MCQS.objects.get(question_id=question)
-            question_details.append({
-                'type': question.type,
-                'statement': question.statement,
-                'answer': mcq_answer.answer,
-                'id': question.id,
-            })
+            try:
+                mcq_answer = Question_MCQS.objects.get(question_id=question)
+                question_details.append({
+                    'type': question.type,
+                    'statement': question.statement,
+                    'answer': mcq_answer.answer,
+                    'id': question.id,
+                })
+            except Question_MCQS.DoesNotExist:
+                mcq_answer = {}
         elif question.type == 'true_false':
-            tf_answer = Question_truefalse.objects.get(question_id=question)
-            question_details.append({
-                'type': question.type,
-                'statement': question.statement,
-                'answer': tf_answer.answer,
-                'id': question.id,
+            try:
+                tf_answer = Question_truefalse.objects.get(question_id=question)
+                question_details.append({
+                    'type': question.type,
+                    'statement': question.statement,
+                    'answer': tf_answer.answer,
+                    'id': question.id,
 
-            })
+                })
+            except Question_truefalse.DoesNotExist:
+                mcq_answer = {}
         elif question.type == 'fill_in_blank':
-            fb_answer = Question_fillblank.objects.get(question_id=question)
-            question_details.append({
-                'type': question.type,
-                'statement': question.statement,
-                'answer': fb_answer.answer,
-                'id': question.id,
-            })
+            try:
+                fb_answer = Question_fillblank.objects.get(question_id=question)
+                question_details.append({
+                    'type': question.type,
+                    'statement': question.statement,
+                    'answer': fb_answer.answer,
+                    'id': question.id,
+                })
+            except Question_fillblank.DoesNotExist:
+                mcq_answer = {}
     
     context = {'questions': question_details, 'lesson': selected_lesson}
     return render(request, "teacher/questions_by_lesson.html", context)
@@ -490,6 +499,8 @@ def students_results(request, class_id):
         total_score = Result.objects.filter(
             student_id=student
         ).aggregate(Sum('marks'))['marks__sum'] or 0
+        
+        print("total_score :", total_score)
         
         # Total number of questions the student should have attempted
         total_questions = Question.objects.filter(

@@ -1,9 +1,10 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from education_system.decorators import role_required
 from teacher.models import *
 from django.http import JsonResponse
 from django.db.models import Sum
-
+import logging
+from django.contrib import messages
 
 # Dashboard with all lessons list of his class
 
@@ -38,8 +39,6 @@ def dashboard(request):
     return render(request, "student/dashboard.html", context)
 
 
-
-
 # Question of lessons
 @role_required('student')
 def questions(request, lesson_id):
@@ -66,6 +65,9 @@ def questions(request, lesson_id):
 
 
 # Start quizing according to selected lesson
+logger = logging.getLogger(__name__)
+
+# Configure logger
 @role_required('student')
 def quizing(request, lesson_id):
     student = request.user
@@ -84,23 +86,22 @@ def quizing(request, lesson_id):
             }
             
             if question.type == 'mcqs':
-                mcqs = Question_MCQS.objects.get(question_id=question)
-                question_data['options'] = {
-                    'option_a': mcqs.option_a,
-                    'option_b': mcqs.option_b,
-                    'option_c': mcqs.option_c,
-                    'option_d': mcqs.option_d,
-                }
+                try:
+                    mcqs = Question_MCQS.objects.get(question_id=question)
+                    question_data['options'] = {
+                        'option_a': mcqs.option_a,
+                        'option_b': mcqs.option_b,
+                        'option_c': mcqs.option_c,
+                        'option_d': mcqs.option_d,
+                    }
+                except Question_MCQS.DoesNotExist:
+                    mcqs = None
+                question_data['options'] = {} if mcqs is None else question_data['options']
 
             questions_with_options.append(question_data)
 
-
     if request.method == 'POST':
-        total_score = Result.objects.filter(
-            student_id=student, lesson_id= lesson
-        ).aggregate(Sum('marks'))['marks__sum'] or 0
-
-        score = total_score
+        score = 0
         
         for question in questions_with_options:
             answer_key = f'answer_{question["id"]}'
@@ -108,28 +109,34 @@ def quizing(request, lesson_id):
                 submitted_answer = request.POST[answer_key]
                 correct_answer = None
                 
-                if question['type'] == 'true_false':
-                    correct_answer = Question_truefalse.objects.get(question_id=question['id']).answer
-                elif question['type'] == 'mcqs':
-                    correct_answer = Question_MCQS.objects.get(question_id=question['id']).answer
-                elif question['type'] == 'fill_in_blank':
-                    correct_answer = Question_fillblank.objects.get(question_id=question['id']).answer.lower()
-                    submitted_answer = submitted_answer.lower()
-                    
-                if str(submitted_answer) == str(correct_answer):
-                    score + 10
-
-                Result.objects.create(
+                try:
+                    if question['type'] == 'true_false':
+                        correct_answer = Question_truefalse.objects.get(question_id=question['id']).answer
+                    elif question['type'] == 'mcqs':
+                        correct_answer = Question_MCQS.objects.get(question_id=question['id']).answer
+                    elif question['type'] == 'fill_in_blank':
+                        correct_answer = Question_fillblank.objects.get(question_id=question['id']).answer.lower()
+                        submitted_answer = submitted_answer.lower()
+                except Exception as e:
+                    print(f"Error retrieving correct answer: {e}")
+                
+                is_correct = str(submitted_answer) == str(correct_answer)
+                score += 10 if is_correct else 0
+                
+                # Create or update the Result object
+                Result.objects.update_or_create(
                     student_id=student,
                     question_id=Question.objects.get(id=question["id"]),
                     lesson_id=lesson,
-                    answer=submitted_answer,
-                    is_correct=submitted_answer == correct_answer,
-                    marks=score
+                    defaults={
+                        'answer': submitted_answer,
+                        'is_correct': is_correct,
+                        'marks': 10 if is_correct else 0
+                    }
                 )
-
+        
         return redirect('questions', lesson_id=lesson.id)
-    
+
     questions_json = JsonResponse(questions_with_options, safe=False)
     
     context = {

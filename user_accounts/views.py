@@ -45,9 +45,11 @@ def login_user(request):
             return redirect('login')
         else:
             if user.last_login is None:
-                params = urlencode({'user_id': user.id})
-                change_password_url = f"{reverse('change_password')}?{params}"
-                return redirect(change_password_url)
+                # params = urlencode({'user_id': user.id})
+                # change_password_url = f"{reverse('change_password')}?{params}"
+                # return redirect(change_password_url)
+                request.session['user_id'] = user.id
+                return redirect('change_password')
             else:
                 login(request, user)
                 if user.role == 'teacher':
@@ -138,8 +140,8 @@ def delete_user(request, id):
 
 # Change Password
 def change_password(request):
-    user_id = request.GET.get('user_id')
-    user = get_object_or_404(CustomUser, id=user_id)
+    # user_id = request.GET.get('user_id')
+    user_id = request.session.get('user_id')
 
     if request.method == 'POST':
         password = request.POST.get("password")
@@ -149,10 +151,13 @@ def change_password(request):
             messages.error(request, "Password and confirm password do not match.")
             return redirect("change_password")
         
+        user = get_object_or_404(CustomUser, id=user_id)
+        print("user: ", user)
         user.set_password(password)
         user.save()
         
         login(request, user)
+        del request.session['user_id']
         
         if user.role == 'teacher':
             return redirect("teacher_dashboard")
